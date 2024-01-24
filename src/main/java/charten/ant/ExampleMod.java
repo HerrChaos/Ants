@@ -1,4 +1,4 @@
-package com.example;
+package charten.ant;
 
 import net.fabricmc.api.ModInitializer;
 
