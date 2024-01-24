@@ -1,31 +1,31 @@
 {
 	"schemaVersion": 1,
-	"id": "modid",
+	"id": "ant",
 	"version": "${version}",
-	"name": "Example mod",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "Ant's",
+	"description": "Adds Ants",
 	"authors": [
-		"Me!"
+		"Chaos"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "",
+		"sources": ""
 	},
 	"license": "CC0-1.0",
-	"icon": "assets/modid/icon.png",
+	"icon": "assets/ant/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.example.ExampleMod"
+			"charten.ant.ExampleMod"
 		],
 		"client": [
-			"com.example.ExampleModClient"
+			"charten.ant.ExampleModClient"
 		]
 	},
 	"mixins": [
-		"modid.mixins.json",
+		"ant.mixins.json",
 		{
-			"config": "modid.client.mixins.json",
+			"config": "ant.client.mixins.json",
 			"environment": "client"
 		}
 	],
