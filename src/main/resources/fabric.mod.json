@@ -16,7 +16,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"charten.ant.ExampleMod"
+          "charten.ant.Main"
 		],
 		"client": [
 			"charten.ant.ExampleModClient"
