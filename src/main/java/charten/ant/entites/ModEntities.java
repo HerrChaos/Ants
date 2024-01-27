@@ -1,7 +1,8 @@
 package charten.ant.entites;
 
-import charten.ant.entites.custom.AntEntity;
 import charten.ant.Main;
+import charten.ant.entites.custom.QueenAntEntity;
+import charten.ant.entites.custom.WorkerAntEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
@@ -13,14 +14,18 @@ import net.minecraft.util.Identifier;
 
 public class ModEntities {
 
-    public static final EntityType<AntEntity> QUEEN_ANT = Registry.register(Registries.ENTITY_TYPE,
+    public static final EntityType<QueenAntEntity> QUEEN_ANT = Registry.register(Registries.ENTITY_TYPE,
             new Identifier(Main.MOD_ID, "queen_ant"),
-            FabricEntityTypeBuilder.<AntEntity>create(SpawnGroup.MISC, AntEntity::new)
-                    .dimensions(EntityDimensions.fixed(0.5f, 0.25f))
-                    .trackRangeBlocks(4).trackedUpdateRate(10)
-                    .build());
+            FabricEntityTypeBuilder.<QueenAntEntity>create(SpawnGroup.MISC, QueenAntEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.5f, 0.25f)).build());
+
+    public static final EntityType<WorkerAntEntity> WORKER_ANT = Registry.register(Registries.ENTITY_TYPE,
+            new Identifier(Main.MOD_ID, "worker_ant"),
+            FabricEntityTypeBuilder.<WorkerAntEntity>create(SpawnGroup.MISC, WorkerAntEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.5f, 0.25f)).build());
     public static void registerEntities(String modId) {
-        FabricDefaultAttributeRegistry.register(QUEEN_ANT, AntEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(QUEEN_ANT, QueenAntEntity.createAntAttributes());
+        FabricDefaultAttributeRegistry.register(WORKER_ANT, WorkerAntEntity.createAntAttributes());
         Main.LOGGER.info("Registering Entities for " + modId);
     }
 }

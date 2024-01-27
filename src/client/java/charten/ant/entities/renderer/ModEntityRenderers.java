@@ -10,11 +10,11 @@ import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.Identifier;
 
 public class ModEntityRenderers {
-    public static final EntityModelLayer MODEL_ANT_LAYER = new EntityModelLayer(new Identifier(Main.MOD_ID, "ant"), "main");
 
     public static void registerModEntityRenderers() {
         EntityRendererRegistry.register(ModEntities.QUEEN_ANT, AntRenderer::new);
+        EntityRendererRegistry.register(ModEntities.WORKER_ANT, AntRenderer::new);
 
-        EntityModelLayerRegistry.registerModelLayer(MODEL_ANT_LAYER, AntEntityModel::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(AntRenderer.MODEL_ANT_LAYER, AntEntityModel::getTexturedModelData);
     }
 }
