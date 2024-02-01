@@ -6,6 +6,7 @@ import charten.ant.util.GeneralUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.data.client.Model;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -32,12 +33,11 @@ public class AntEntity extends PathAwareEntity {
 
     private int AGE;
     private float food;
-    private QueenAntEntity queenAnt;
     private final double movement_speed = 1;
-    protected AntEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+    protected AntEntity(EntityType<? extends AntEntity> entityType, World world) {
         super(entityType, world);
         if (entityType == ModEntities.QUEEN_ANT) {
-            this.food = 20;
+            this.food = 30;
         } else {
             this.food = 5;
         }
@@ -46,9 +46,8 @@ public class AntEntity extends PathAwareEntity {
 
     public AntEntity(EntityType<? extends AntEntity> entityType, World world, int age, QueenAntEntity queenAnts) {
         super(entityType, world);
-        this.food = 20;
+        this.food = 5;
         this.AGE = age;
-        this.queenAnt = queenAnts;
         this.queenUUID = queenAnts.getUuid();
     }
 
@@ -94,7 +93,6 @@ public class AntEntity extends PathAwareEntity {
     public final boolean cannotDespawn() {
         return true;
     }
-
     public void setFood(float foody) {
         this.food = foody;
     }

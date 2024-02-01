@@ -2,7 +2,9 @@ package charten.ant.util;
 
 import charten.ant.entites.ModEntities;
 import charten.ant.entites.custom.AntEntity;
+import charten.ant.entites.custom.MajorAntEntity;
 import charten.ant.entites.custom.QueenAntEntity;
+import charten.ant.entites.custom.WorkerAntEntity;
 import net.minecraft.block.BeehiveBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
@@ -25,7 +27,7 @@ public class Collonie {
         for (AntEntity ant: this.getAnts(world)) {
             food += ant.getFood();
         }
-        return food / this.getSize(world);
+        return food / ((float)this.getSize(world));
     }
 
 
@@ -39,6 +41,54 @@ public class Collonie {
                 Entity ant = GeneralUtil.getEntityByUUID(world, uuid);
                 if (ant instanceof AntEntity) {
                     Ants.add((AntEntity) ant);
+                }
+            }
+        }
+        return Ants;
+    }
+    public List<WorkerAntEntity> getWorkerAnts(ServerWorld world) {
+        List<WorkerAntEntity> Ants = new ArrayList<>();
+        for (UUID uuid : this.getAntsUUID()) {
+            if (!world.isClient()) {
+                Entity ant = GeneralUtil.getEntityByUUID(world, uuid);
+                if (ant instanceof WorkerAntEntity) {
+                    Ants.add((WorkerAntEntity) ant);
+                }
+            }
+        }
+        return Ants;
+    }
+    public List<MajorAntEntity> getMajorAnts(ServerWorld world) {
+        List<MajorAntEntity> Ants = new ArrayList<>();
+        for (UUID uuid:this.getAntsUUID()) {
+            if (!world.isClient()) {
+                Entity ant = GeneralUtil.getEntityByUUID(world, uuid);
+                if (ant instanceof MajorAntEntity) {
+                    Ants.add((MajorAntEntity) ant);
+                }
+            }
+        }
+        return Ants;
+    }
+    public List<MajorAntEntity> getRoyalGuard(ServerWorld world) {
+        List<MajorAntEntity> Ants = new ArrayList<>();
+        for (UUID uuid:this.getAntsUUID()) {
+            if (!world.isClient()) {
+                Entity ant = GeneralUtil.getEntityByUUID(world, uuid);
+                if (ant instanceof MajorAntEntity && ((MajorAntEntity)ant).getActivity().equals("royal_guard")) {
+                    Ants.add((MajorAntEntity) ant);
+                }
+            }
+        }
+        return Ants;
+    }
+    public List<WorkerAntEntity> getStorageAnt(ServerWorld world) {
+        List<WorkerAntEntity> Ants = new ArrayList<>();
+        for (UUID uuid:this.getAntsUUID()) {
+            if (!world.isClient()) {
+                Entity ant = GeneralUtil.getEntityByUUID(world, uuid);
+                if (ant instanceof WorkerAntEntity && ((WorkerAntEntity)ant).getActivity().equals("storage")) {
+                    Ants.add((WorkerAntEntity) ant);
                 }
             }
         }

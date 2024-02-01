@@ -21,15 +21,13 @@ public class QueenAntEntity extends AntEntity {
 
     private Collonie collonie;
 
-    public QueenAntEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+    public QueenAntEntity(EntityType<? extends AntEntity> entityType, World world) {
         super(entityType, world);
         this.collonie = new Collonie(this.getUuid());
     }
     public QueenAntEntity(World world, int age) {
         super(ModEntities.QUEEN_ANT, world, age, null);
-        this.setHealth(30);
         this.collonie = new Collonie(this.getUuid());
-        this.setFood(20);
     }
     @Override
     public boolean isQueen() {
@@ -39,7 +37,12 @@ public class QueenAntEntity extends AntEntity {
         return this.collonie;
     }
 
-
+    public ServerWorld getServerWorld() {
+        if (this.getWorld() instanceof ServerWorld) {
+            return (ServerWorld) this.getWorld();
+        }
+        return this.getCommandSource().getWorld();
+    }
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
@@ -59,29 +62,73 @@ public class QueenAntEntity extends AntEntity {
         super.readCustomDataFromNbt(nbt);
     }
 
-    public void LayWorkerEgg() {
-        if (!this.getWorld().isClient()) {
-            AntEntity Ant = new WorkerAntEntity(this.getWorld(), 0, this);
-            Ant.setPosition(this.getPos().add(0,1,0));
-            this.getWorld().spawnEntity(Ant);
-            this.getCollonie().addAnt(Ant.getUuid());
-        }
+    public WorkerAntEntity LayWorkerEgg() {
+        WorkerAntEntity workerAnt = new WorkerAntEntity(this.getWorld(), 0, this);
+        workerAnt.setPosition(this.getPos().add(0,1,0));
+        this.getWorld().spawnEntity(workerAnt);
+        this.getCollonie().addAnt(workerAnt.getUuid());
+        return workerAnt;
     }
-    public void LayQueenEgg() {
-        AntEntity Ant = new QueenAntEntity(this.getWorld(), 0);
-        Ant.setPosition(this.getPos());
-        this.getWorld().spawnEntity(Ant);
+    public WorkerAntEntity prepWorkerEgg() {
+        WorkerAntEntity workerAnt = new WorkerAntEntity(this.getWorld(), 0, this);
+        workerAnt.setPosition(this.getPos().add(0,1,0));
+        this.getCollonie().addAnt(workerAnt.getUuid());
+        return workerAnt;
     }
+    public QueenAntEntity LayQueenEgg() {
+        QueenAntEntity queenAnt = new QueenAntEntity(this.getWorld(), 0);
+        queenAnt.setPosition(this.getPos());
+        this.getWorld().spawnEntity(queenAnt);
+        return queenAnt;
+    }
+    public MajorAntEntity LayMajorEgg() {
+        MajorAntEntity MajorAnt = new MajorAntEntity(this.getWorld(), 0, this);
+        MajorAnt.setPosition(this.getPos());
+        this.getWorld().spawnEntity(MajorAnt);
+        this.getCollonie().addAnt(MajorAnt.getUuid());
+        return MajorAnt;
+    }
+    public MajorAntEntity prepMajorEgg() {
+        MajorAntEntity MajorAnt = new MajorAntEntity(this.getWorld(), 0, this);
+        MajorAnt.setPosition(this.getPos());
+        this.getCollonie().addAnt(MajorAnt.getUuid());
+        return MajorAnt;
+    }
+
     public void tick() {
         if (this.collonie != null) {
             if (!this.getWorld().isClient()) {
+                if (this.getCollonie().getFoodAverage(this.getServerWorld()) > 10) {
+                    List<AntEntity> ants = this.getCollonie().getAnts(this.getServerWorld());
+                    for (AntEntity Ant: ants) {
+                        if (Ant instanceof WorkerAntEntity && ((WorkerAntEntity) Ant).getActivity().equals("idle")) {
+                            ((WorkerAntEntity) Ant).setActivity("storage");
+                            break;
+                        }
+                    }
+                }
                 if (this.getFood() > 10 && this.getRandom().nextInt(100) == 1) {
-                    this.LayWorkerEgg();
+                    if (this.getRandom().nextInt(3) == 1) {
+                        this.LayMajorEgg().setActivity("royal_guard");
+                    } else {
+                        this.LayWorkerEgg();
+                    }
                     this.setFood(this.getFood() - 5);
                     System.out.println("Food at: " + this.getFood());
                 }
             }
         }
         super.tick();
+    }
+
+    public AntEntity chooseEggToLay() {
+        if (this.getCollonie().getSize(this.getServerWorld()) > 15 &&
+                this.getRandom().nextInt(3) == 1) {
+            MajorAntEntity major = this.prepMajorEgg();
+            if (this.getCollonie().getRoyalGuard(this.getServerWorld()).size() <= 2) {
+                major.setActivity("royal_guard");
+            }
+        }
+        return this.prepWorkerEgg();
     }
 }
